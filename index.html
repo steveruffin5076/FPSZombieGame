@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="theme-color" content="#0a0c0b" />
+    <title>DEADLIGHT — Zombie Survival FPS</title>
+    <meta
+      name="description"
+      content="DEADLIGHT: a browser-based first-person zombie survival shooter with AI teammates, an adaptive AI Director, special infected and a five-chapter campaign."
+    />
+    <style>
+      /* ------------------------------------------------------------------
+         Base shell styles. The HUD / menus live in src/styles/*.css so the
+         game code stays focused on gameplay. Everything here only needs to
+         guarantee a black, full-viewport, non-scrolling canvas host.
+      ------------------------------------------------------------------ */
+      :root {
+        color-scheme: dark;
+        --ui-font: 'Inter', 'Segoe UI', 'Helvetica Neue', system-ui, -apple-system, sans-serif;
+        --blood: #8e1c14;
+        --blood-bright: #c62a1c;
+        --amber: #e3a33b;
+        --steel: #9fb0b5;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #050706;
+        color: #d8dedc;
+        font-family: var(--ui-font);
+        -webkit-font-smoothing: antialiased;
+      }
+      #game-root {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+      }
+      canvas#viewport {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        outline: none;
+        touch-action: none;
+      }
+      /* Overlay layer: HUD + menus. `pointer-events: none` by default so the
+         canvas keeps receiving mouse-look input; individual widgets opt in. */
+      .overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        user-select: none;
+        contain: layout style;
+      }
+      .overlay.interactive {
+        pointer-events: auto;
+      }
+      /* Boot / loading screen */
+      #boot {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        background: radial-gradient(circle at 50% 40%, #16201c 0%, #050706 70%);
+        z-index: 50;
+        transition: opacity 0.6s ease;
+      }
+      #boot.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #boot h1 {
+        font-size: clamp(2rem, 7vw, 4.5rem);
+        letter-spacing: 0.42em;
+        margin: 0 0 0 0.42em;
+        font-weight: 800;
+        color: #e8ece9;
+        text-shadow: 0 0 34px rgba(198, 42, 28, 0.55);
+      }
+      #boot .tagline {
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        color: #7d8a84;
+        margin-top: -10px;
+      }
+      #boot-bar {
+        width: min(420px, 66vw);
+        height: 4px;
+        background: #1c2420;
+        overflow: hidden;
+        border-radius: 2px;
+      }
+      #boot-bar > i {
+        display: block;
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--blood), var(--blood-bright));
+        transition: width 0.25s ease;
+      }
+      #boot-status {
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #6d7a74;
+        min-height: 1em;
+      }
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-root">
+      <canvas id="viewport"></canvas>
+      <div id="ui-overlay" class="overlay"></div>
+
+      <div id="boot">
+        <h1>DEADLIGHT</h1>
+        <div class="tagline">No cure. No rescue. Just the next safe room.</div>
+        <div id="boot-bar"><i></i></div>
+        <div id="boot-status">Booting engine…</div>
+      </div>
+
+      <noscript style="position: absolute; inset: 0; background: #050706; padding: 2rem; z-index: 99">
+        DEADLIGHT requires JavaScript and WebGL2.
+      </noscript>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
